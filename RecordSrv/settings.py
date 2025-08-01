@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://recordsrv-server.keli.vip"
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

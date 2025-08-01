@@ -1,18 +1,16 @@
-FROM python:3.10.13-alpine3.18
-
+FROM python:3.11-slim
 # 🔥 添加这一行
 USER root
 
 WORKDIR /RecordSrv
 
 # 暂时用官方源试试是否能成功
-RUN apk update && \
-    apk add --no-cache build-base dumb-init make && \
-    pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN apt-get update && \
+    apt-get install -y dumb-init make && \
+    pip install --upgrade pip  
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
-
+RUN pip install -r requirements.txt  
 COPY . .
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
