@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+ <meta charset="UTF-8" />
+ <title>中文语音识别（上传音频）</title>
+</head>
+<body>
+ <h2>📂 上传音频文件进行中文语音识别</h2>
+ <input type="file" id="audio-file" accept="audio/*" />
+ <pre id="output">识别结果将在这里显示...</pre>
+
+ <!-- 引入 vosk-browser -->
+ <script src="https://cdn.jsdelivr.net/npm/vosk-browser@0.0.3/dist/vosk.js"></script>
+ <script>
+ let model;
+ let recognizer;
+
+ async function initModel() {
+ if (!model) {
+ // 加载中文模型（你需要将该 zip 模型部署在你的网站路径上）
+ model = await Vosk.createModel('vosk-model-small-cn-0.22.zip');
+ recognizer = new model.KaldiRecognizer(16000); // 使用 16kHz 采样率
+ 
+ // 监听识别结果事件
+ recognizer.on('result', (msg) => {
+ document.getElementById('output').textContent +=
+ '\n[最终结果] ' + msg.result.text;
+ });
+ recognizer.on('partialresult', (msg) => {
+ document.getElementById('output').textContent =
+ '[识别中] ' + msg.result.partial;
+ });
+ }
+ }
+
+ async function recognizeAudio(file) {
+ const audioContext = new AudioContext({ sampleRate: 16000 });
+ const arrayBuffer = await file.arrayBuffer();
+ const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+ // 将整个 AudioBuffer 对象传入
+ recognizer.acceptWaveform(audioBuffer);
+ }
+
+ document.getElementById('audio-file').addEventListener('change', async (event) => {
+ const file = event.target.files[0];
+ if (!file) return;
+
+ document.getElementById('output').textContent = '⏳ 正在加载模型并处理音频...';
+
+ await initModel();
+ await recognizeAudio(file);
+ });
+ </script>
+</body>
+</html>
+

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>自动录音上传播放</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; }
+    button { margin: 1em 0; padding: 0.5em 1em; font-size: 16px; }
+    audio { margin-top: 1em; display: block; }
+  </style>
+</head>
+<body>
+
+  <h1>自动录音上传系统</h1>
+  <button id="recordBtn" disabled>🎤 获取中...</button>
+  <audio id="player" controls style="display:none;"></audio>
+
+  <script>
+    window.onload = function () {
+      let mediaRecorder;
+      let audioChunks = [];
+      const recordBtn = document.getElementById("recordBtn");
+      const player = document.getElementById("player");
+
+      let token = localStorage.getItem("token");
+      let refresh = localStorage.getItem("refresh");
+
+      async function login() {
+        const res = await fetch("/api/token/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: "admin", password: "admin" })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          token = data.access;
+          refresh = data.refresh;
+          localStorage.setItem("token", token);
+          localStorage.setItem("refresh", refresh);
+          recordBtn.disabled = false;
+          recordBtn.textContent = "🎤 开始录音";
+          loadRecordings();
+        } else {
+          alert("❌ 登录失败: " + (data.detail || JSON.stringify(data)));
+        }
+      }
+
+      async function refreshToken() {
+        const res = await fetch("/api/token/refresh/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh: refresh })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          token = data.access;
+          localStorage.setItem("token", token);
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      async function uploadAudio(formData) {
+        let res = await fetch("/recordings/Recording/", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + token },
+          body: formData
+        });
+
+        if (res.status === 401 && refresh) {
+          const refreshed = await refreshToken();
+          if (refreshed) {
+            res = await fetch("/recordings/Recording/", {
+              method: "POST",
+              headers: { Authorization: "Bearer " + token },
+              body: formData
+            });
+          } else {
+            alert("🔒 登录过期，请刷新页面重新登录！");
+            return;
+          }
+        }
+
+        const result = await res.json();
+        if (res.ok) {
+          alert("✅ 录音上传成功！");
+          loadRecordings();
+        } else {
+          alert("❌ 上传失败：" + JSON.stringify(result));
+        }
+      }
+
+      async function loadRecordings() {
+        const res = await fetch("/recordings/Recording/", {
+          headers: { Authorization: "Bearer " + token }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showRecordings(data);
+        }
+      }
+
+      function showRecordings(list) {
+        let existing = document.getElementById("recordingsList");
+        if (existing) existing.remove();
+
+        const container = document.createElement("div");
+        container.id = "recordingsList";
+        container.innerHTML = "<h2>🎧 历史录音：</h2>";
+
+        list.reverse().forEach(item => {
+          const audio = document.createElement("audio");
+          audio.src = item.audio_file;
+          audio.controls = true;
+
+          const title = document.createElement("div");
+          title.textContent = "📌 " + item.title;
+
+          const wrapper = document.createElement("div");
+          wrapper.style.margin = "1em 0";
+          wrapper.appendChild(title);
+          wrapper.appendChild(audio);
+
+          container.appendChild(wrapper);
+        });
+
+        document.body.appendChild(container);
+      }
+
+      recordBtn.addEventListener("click", async () => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+          recordBtn.textContent = "🎤 开始录音";
+          return;
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = event => {
+          audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const blob = new Blob(audioChunks, { type: "audio/webm" });
+          const file = new File([blob], "recording.webm", { type: "audio/webm" });
+
+          const audioURL = URL.createObjectURL(blob);
+          player.src = audioURL;
+          player.style.display = "block";
+
+          const formData = new FormData();
+          const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+          formData.append("title", timestamp);     // 自动生成标题
+          formData.append("audio_file", file);
+          formData.append("user", 1);              // 写死的用户 ID
+
+          await uploadAudio(formData);
+        };
+
+        mediaRecorder.start();
+        recordBtn.textContent = "⏹️ 停止录音";
+      });
+
+      login(); // 页面加载后自动登录
+    };
+  </script>
+</body>
+</html>
