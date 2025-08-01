@@ -9,6 +9,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.shortcuts import render
 from opencc import OpenCC
+from django_filters.rest_framework import DjangoFilterBackend
 
 cc = OpenCC('t2s')  # Traditional to Simplified
 from django.contrib.auth.models import User
@@ -110,6 +111,8 @@ class RecordingViewSet(ModelViewSet):
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id','user', 'title', 'created_at']
 
     @action(detail=True, methods=["post"], url_path="analyze")
     def analyze(self, request, pk=None):
