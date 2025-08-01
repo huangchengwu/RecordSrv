@@ -111,7 +111,7 @@ class RecordingViewSet(ModelViewSet):
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
     permission_classes = [IsAuthenticated]
-    #支持过滤
+    ##支持过滤
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id','user', 'title', 'created_at']
 
