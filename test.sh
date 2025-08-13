@@ -1,6 +1,6 @@
 #!/bin/bash
 #获取token
-Domain="localhost"
+Domain="recordsrv-server.keli.vip"
 
 Token=`curl -X POST http://$Domain/api/token/ \
   -H "Content-Type: application/json" \
@@ -41,6 +41,7 @@ curl -X GET http://$Domain/recordings/Recording/ \
 
 #过滤查询
 curl -X GET "http://$Domain/recordings/Recording/?title=测试录音"  -H "Authorization: Bearer $Token"
+curl -X GET "http://$Domain/recordings/Recording/?id=9"  -H "Authorization: Bearer $Token"
 
 #获取单个录音
   curl -X GET http://$Domain/recordings/Recording/1/ \
