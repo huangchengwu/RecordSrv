@@ -78,7 +78,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 re_path(
     r"^uploads/(?P<path>.*)$",
-    login_required(serve),
+    serve,
     {"document_root": settings.MEDIA_ROOT},
 )
 
