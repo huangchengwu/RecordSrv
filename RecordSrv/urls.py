@@ -78,7 +78,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 re_path(
     r"^uploads/(?P<path>.*)$",
+<<<<<<< HEAD
    serve,
+=======
+    serve,
+>>>>>>> 491c9f019ae1c0addc6d0e50cad0d77ffc757958
     {"document_root": settings.MEDIA_ROOT},
 )
 ]

@@ -167,4 +167,8 @@ SIMPLEUI_HOME_ICON = "fa fa-user"
 
 SIMPLEUI_LOGO = "https://www.hitosea.com/images/logo.svg"
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+<<<<<<< HEAD
 USE_X_FORWARDED_HOST = True
+=======
+USE_X_FORWARDED_HOST = True
+>>>>>>> 491c9f019ae1c0addc6d0e50cad0d77ffc757958
