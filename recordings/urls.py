@@ -8,7 +8,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
-from .views import * 
+from .views import *
 
 
 schema_view = get_schema_view(
@@ -22,22 +22,15 @@ schema_view = get_schema_view(
 )
 
 
-
 router = DefaultRouter()
 router.register(r"Recording", RecordingViewSet)
+router.register(r"RecordingGroup", RecordingGroupViewSet, basename="recording_group")
+
 
 urlpatterns = [
-      path('index/', Index),
-    path("sharedVariable/", sharedVariable.as_view()),
-
+    path("index/", Index),
+    path("analyze_recording/", analyze_recording.as_view()),
 ]
 
 
 urlpatterns += router.urls  # 将路由器中的所以路由信息追到到django的路由列表中
-
-
-
-
-
-
-

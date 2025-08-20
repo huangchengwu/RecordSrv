@@ -8,3 +8,9 @@ class RecordingSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class RecordingGroupSerializer(ModelSerializer):
+    class Meta:
+        model = RecordingGroup
+        fields = '__all__'
+
+

@@ -63,3 +63,27 @@ curl -X PATCH http://$Domain/recordings/Recording/1/ \
 curl -X DELETE http://$Domain/recordings/Recording/1/ \
   -H "Authorization: Bearer $Token"
 
+
+
+curl https://open-webui.keli.vip/api/chat/completions \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiZmE1MGUyLWM1ZTEtNDcyOS05ZGE0LWZhOWE4OWUxNGY1MiJ9.J8zHA8Vsqto3CTlxZrOnOYE0mXDBHXZ_2AyminpQeA0" \
+-d '{
+  "model": "qwen3:1.7b",
+  "messages": [
+        {
+            "role": "user",
+            "content": "你好"
+        }
+    ],
+  "stream": false
+}'
+
+
+
+
+
+
+
+curl https://open-webui.keli.vip/api/models \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiZmE1MGUyLWM1ZTEtNDcyOS05ZGE0LWZhOWE4OWUxNGY1MiJ9.J8zHA8Vsqto3CTlxZrOnOYE0mXDBHXZ_2AyminpQeA0" 

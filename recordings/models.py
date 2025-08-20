@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-
+from django.utils import timezone
+import time 
 class Recording(models.Model):
+    Id = models.AutoField(primary_key=True)
+
     user = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
@@ -16,7 +18,9 @@ class Recording(models.Model):
     )
     audio_file = models.FileField(
         upload_to='recordings/%Y/%m/%d/',  # 自动按日期分类文件夹
-        verbose_name="音频文件"
+        verbose_name="音频文件",
+                default=''
+
     )
     duration = models.FloatField(
         help_text="单位：秒", 
@@ -36,3 +40,34 @@ class Recording(models.Model):
 
     def __str__(self):
         return self.title or f"Recording #{self.pk}"
+
+
+
+
+
+
+
+class RecordingGroup(models.Model):
+    Id = models.AutoField(primary_key=True)
+    name = models.CharField(
+        max_length=255, verbose_name="录音组", default="", unique=True
+    )
+    audio_file = models.FileField(
+        upload_to='recordinggroup/%Y/%m/%d/',  # 自动按日期分类文件夹
+        verbose_name="音频文件",
+        null=True,  # 允许数据库中存储 NULL 值
+        blank=True,  # 允许表单提交时为空（管理员界面或表单验证时生效）
+        default=''  # 保持默认空字符串（可选，根据需求决定是否保留）
+    )
+    group = models.ManyToManyField(Recording)
+    analysis = models.TextField(verbose_name="ai分析", default="")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "录音组"
+        verbose_name_plural = verbose_name
+

@@ -81,6 +81,4 @@ re_path(
    serve,
     {"document_root": settings.MEDIA_ROOT},
 )
-
-
 ]

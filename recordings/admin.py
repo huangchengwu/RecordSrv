@@ -20,9 +20,25 @@ admin.site.site_title = "录音后台管理"
 admin.site.site_header = "录音后台管理"
 
 
+@admin.register(RecordingGroup)
+class RecordingGroupAdmin(admin.ModelAdmin):
+    list_display = (
+        "Id",
+        "name",
+  
+        "analysis",
+        "created_at",
+        "updated_at"
+    )
+
+    search_fields = ("Id","name", "analysis")  # list
+
+
 @admin.register(Recording)
 class RecordingAdmin(admin.ModelAdmin):
     list_display = (
+            "Id",
+
         "user",
         "title",
         "audio_file",
