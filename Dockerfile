@@ -6,7 +6,7 @@ WORKDIR /RecordSrv
 
 # 暂时用官方源试试是否能成功
 RUN apt-get update && \
-    apt-get install -y dumb-init make && \
+    apt-get install -y dumb-init ffmpeg make && \
     pip install --upgrade pip  
 
 COPY requirements.txt .
