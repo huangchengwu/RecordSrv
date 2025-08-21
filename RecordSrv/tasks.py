@@ -7,6 +7,8 @@ import os
 from transformers import pipeline
 from opencc import OpenCC
 from recordings.models import *
+from django.conf import settings
+
 asr = pipeline(
     "automatic-speech-recognition",
     model="openai/whisper-small",
@@ -105,17 +107,7 @@ def generate_meeting_minutes_task(
         print("ai分析成功")
     except Exception as e:
         print("ai分析失败", e)
-    # generate_meeting_minutes.delay(Id,str(request.user),action,version)
-    """
-            调用Open-WebUI API生成会议纪要
-            
-            参数:
-                meeting_content: 会议内容文本，可以是会议记录、对话内容等
-                model: 使用的模型名称，默认是qwen3:1.7b
-            
-            返回:
-                生成的会议纪要文本，如果出错则返回None
-            """
+    print("请求数据")
     # API端点
     url = "https://open-webui.keli.vip/api/chat/completions"
 
@@ -138,7 +130,8 @@ def generate_meeting_minutes_task(
     # 请求头
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiZmE1MGUyLWM1ZTEtNDcyOS05ZGE0LWZhOWE4OWUxNGY1MiJ9.J8zHA8Vsqto3CTlxZrOnOYE0mXDBHXZ_2AyminpQeA0",
+        "Authorization": f"Bearer {settings.OPENWEBUI_API_KEY}",
+
     }
 
     # 请求体
