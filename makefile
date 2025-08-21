@@ -15,7 +15,7 @@ dev:
 prd:
 	cp -rf RecordSrv/settings.py_prd RecordSrv/settings.py
 build:
-	docker build -t recordsrv:$(version) .
+	docker build -t huangchengwu6904/recordsrv:$(version) .
 cp_local:
 	# 打包项目
 	rm -rf RecordSrv.tar.gz
