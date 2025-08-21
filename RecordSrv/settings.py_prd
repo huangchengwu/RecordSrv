@@ -154,6 +154,30 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")  # 新建一个uploads文件夹�
 MEDIA_URL = "/uploads/"  # 你上传的文件和图片会默认存在/uploads/editor下 这一步不用创建任何文件夹
 
 
+###
+# 替换原有的 CELERY_BROKER_URL 配置
+CELERY_BROKER_URL = 'sqla+sqlite:///celery_task_queue.db'  # 使用SQLite作为broker
+
+# 结果存储也可以使用SQLite（可选）
+CELERY_RESULT_BACKEND = 'db+sqlite:///celery_results.db'
+
+# 保留其他原有配置（根据需要调整）
+CELERY_TIMEZONE = TIME_ZONE  # 确保TIME_ZONE已在Django中定义，如'TIME_ZONE = 'Asia/Shanghai''
+DJANGO_CELERY_BEAT_TZ_AWARE = False
+CELERY_BEAT_SCHEDULER = "django-celery-beat.schedulers.DatabaseScheduler"
+
+# 如果需要每次只执行一个任务，将并发数改为1
+# CELERY_WORKER_CONCURRENCY = 1
+# 否则保持原有设置
+CELERY_WORKER_CONCURRENCY = 10
+
+CELERYD_PREFETCH_MULTIPLIER = 20
+CELERYD_FORCE_EXECV = True
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 100
+CELERY_DISABLE_RATE_LIMITS = True
+
+###
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static/"),
 ]

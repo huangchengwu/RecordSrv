@@ -14,4 +14,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["sh", "-c", "make run"]
+CMD ["sh", "-c", "make run & make celery"]

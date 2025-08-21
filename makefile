@@ -22,3 +22,5 @@ cp_local:
 	tar cvf RecordSrv.tar.gz ~/RecordSrv
 	scp -r RecordSrv.tar.gz root@192.168.100.44:/tmp
 	ssh root@192.168.100.44 "cd /tmp && tar xvf RecordSrv.tar.gz && cd /tmp/Users/mac-512/RecordSrv && make build"
+celery:
+	python3 -m  celery -A RecordSrv  worker --loglevel=info --concurrency=1  --loglevel=info

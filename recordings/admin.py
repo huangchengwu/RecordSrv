@@ -25,7 +25,7 @@ class RecordingGroupAdmin(admin.ModelAdmin):
     list_display = (
         "Id",
         "name",
-  
+        "status",
         "analysis",
         "created_at",
         "updated_at"

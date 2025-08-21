@@ -48,6 +48,14 @@ class Recording(models.Model):
 
 
 class RecordingGroup(models.Model):
+    # 定义状态选项：元组格式 (存储值, 显示名称)
+    STATUS_CHOICES = [
+        ('unanalyzed', '未分析'),  # 初始状态，未进行AI分析
+        ('analyzing', '分析中'),   # 正在执行AI分析任务
+        ('completed', '分析完成'), # AI分析成功完成
+        ('failed', '分析失败'),    # AI分析出错
+    ]
+    
     Id = models.AutoField(primary_key=True)
     name = models.CharField(
         max_length=255, verbose_name="录音组", default="", unique=True
@@ -60,6 +68,14 @@ class RecordingGroup(models.Model):
         default=''  # 保持默认空字符串（可选，根据需求决定是否保留）
     )
     group = models.ManyToManyField(Recording)
+    # 新增状态字段
+    status = models.CharField(
+        max_length=20,
+        verbose_name="状态",
+        choices=STATUS_CHOICES,
+        default='unanalyzed',  # 默认初始状态为“未分析”
+    )
+
     analysis = models.TextField(verbose_name="ai分析", default="")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="更新时间")
