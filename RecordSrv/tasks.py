@@ -140,6 +140,7 @@ def generate_meeting_minutes_task(
         "messages": [{"role": "user", "content": prompt}],
         "stream": False,
     }
+    print("配置",url,prompt,data,headers)
     analysis = ""
     try:
         # 发送请求
