@@ -9,13 +9,6 @@ from opencc import OpenCC
 from recordings.models import *
 from django.conf import settings
 
-asr = pipeline(
-    "automatic-speech-recognition",
-    model="openai/whisper-small",
-    chunk_length_s=30,
-    generate_kwargs={"language": "zh"},  # 这是关键
-)
-cc = OpenCC("t2s")  # Traditional to Simplified
 
 
 def merge_audios(audio_files, output_file="merged_audio.wav"):
@@ -87,6 +80,13 @@ def generate_meeting_minutes_task(
 ):
     related_recordings=Recording.objects.filter(title=title)
 
+    asr = pipeline(
+        "automatic-speech-recognition",
+        model="openai/whisper-small",
+        chunk_length_s=30,
+        generate_kwargs={"language": "zh"},  # 这是关键
+    )
+    cc = OpenCC("t2s")  # Traditional to Simplified
     # 要合并的音频文件列表（按顺序）
     print( model, title, related_recordings)
      
