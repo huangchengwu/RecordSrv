@@ -161,10 +161,10 @@ def generate_meeting_minutes_task(
     if queryset.exists():
         # 尝试获取已存在的对象（根据name查询）
         obj = RecordingGroup.objects.get(name=title)
-        print("更新数据")
+        print("分析结果",analysis)
         obj.audio_file = title + ".wav"
         obj.analysis = analysis
-
+        
         obj.group.clear()
         
         obj.status = 'analyzing'  # 成功则更新为完成
@@ -180,7 +180,7 @@ def generate_meeting_minutes_task(
         # 遍历输出每个Recording的内容
         obj = RecordingGroup(name=title, audio_file=title + ".wav", analysis=analysis)
         obj.status = 'analyzing'  # 成功则更新为完成
-
+        print("分析结果",analysis)
         obj.save()
 
         for recording in related_recordings:
