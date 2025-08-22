@@ -109,7 +109,7 @@ def generate_meeting_minutes_task(
         print("ai分析失败", e)
     print("请求数据")
     # API端点
-    url = "https://open-webui.keli.vip/api/chat/completions"
+    url = f"{settings.OPENWEBUI_API_URL}/api/chat/completions"
 
     # 构建提示词 - 明确要求生成结构化会议纪要
     prompt = f"""请将以下会议内容整理成一份清晰、专业的会议纪要。
@@ -133,6 +133,7 @@ def generate_meeting_minutes_task(
         "Authorization": f"Bearer {settings.OPENWEBUI_API_KEY}",
 
     }
+
 
     # 请求体
     data = {
