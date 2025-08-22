@@ -144,7 +144,7 @@ def generate_meeting_minutes_task(
     analysis = ""
     try:
         # 发送请求
-        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response = requests.post(url, headers=headers, data=json.dumps(data),timeout=1200)
         response.raise_for_status()  # 检查请求是否成功
 
         # 解析响应
