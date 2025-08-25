@@ -92,6 +92,15 @@ class RecordingViewSet(ModelViewSet):
             # recording.analysis = result["text"]
             # recording.save()
             print("Analyzing audio...",audio_path)
+            asr = pipeline(
+                "automatic-speech-recognition",
+                model="openai/whisper-small",
+                chunk_length_s=30,
+                generate_kwargs={"language": "zh"},  # 这是关键
+            )
+            cc = OpenCC("t2s")  # Traditional to Simplified
+            # 要合并的音频文件列表（按顺序）
+
             result = asr(audio_path)
             transcript = result.get("text", "").strip()
 

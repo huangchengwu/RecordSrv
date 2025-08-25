@@ -16,6 +16,7 @@ import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 import environ
 import os
 
@@ -24,7 +25,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 OPENWEBUI_API_KEY = env("OPENWEBUI_API_KEY")
 OPENWEBUI_API_URL = env("OPENWEBUI_API_URL")
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
