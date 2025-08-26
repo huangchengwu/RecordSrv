@@ -67,7 +67,11 @@ class RecordingGroup(models.Model):
         blank=True,  # 允许表单提交时为空（管理员界面或表单验证时生效）
         default=''  # 保持默认空字符串（可选，根据需求决定是否保留）
     )
-    group = models.ManyToManyField(Recording)
+    group = models.ManyToManyField(
+    Recording,
+    related_name='recording_groups',
+    blank=True  # 显式声明允许为空（可选，默认已支持）
+)
     # 新增状态字段
     status = models.CharField(
         max_length=20,
